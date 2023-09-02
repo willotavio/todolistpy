@@ -8,19 +8,18 @@ def add_task():
         else:
             todo_list.delete(id_entry.get())
             todo_list.insert(id_entry.get(), task_entry.get())
-            id_entry.delete(0, tk.END)
+            current_id.set("")
             task_entry.delete(0, tk.END)
 
 def delete_task():
     if todo_list.curselection():
         todo_list.delete(todo_list.curselection())
         if len(id_entry.get()):
-            id_entry.delete(0)
+            current_id.set("")
 
 def update_task(event):
     if event.widget.curselection():
-        id_entry.delete(0)
-        id_entry.insert(0, event.widget.curselection())
+        current_id.set(event.widget.curselection())
 
 window = tk.Tk()
 window.title("To-Do")
@@ -31,7 +30,9 @@ todo_list.pack(pady=10)
 
 todo_list.bind("<<ListboxSelect>>", update_task)
 
-id_entry = tk.Entry(window)
+current_id = tk.StringVar()
+
+id_entry = tk.Entry(window, textvariable=current_id, state=tk.DISABLED)
 id_entry.pack(pady=10)
 task_entry = tk.Entry(window)
 task_entry.pack(pady=10)
