@@ -16,7 +16,7 @@ def delete_task():
         todo_list.delete(id_entry.get())
         current_id.set("")
 
-def update_task(event):
+def select_task(event):
     task_entry.delete(0, tk.END)
     if event.widget.curselection():
         current_id.set(f"{todo_list.index(event.widget.curselection())}")
@@ -26,15 +26,27 @@ def deselect_task(event):
     current_id.set("")
     task_entry.delete(0, tk.END)
 
+def mark_complete():
+    if len(current_id.get()) > 0:
+        finished_list.insert("end", todo_list.get(current_id.get()))
+        todo_list.delete(current_id.get())
+
 window = tk.Tk()
 window.title("To-Do")
-window.geometry("420x420")
+window.geometry("420x720")
 
+todo_list_title = tk.Label(window, text="To-Do List")
+todo_list_title.pack()
 todo_list = tk.Listbox(window)
 todo_list.pack(pady=10)
 
-todo_list.bind("<<ListboxSelect>>", update_task)
+todo_list.bind("<<ListboxSelect>>", select_task)
 todo_list.bind("<Double-1>", deselect_task)
+
+finished_list_title = tk.Label(window, text="Finished List")
+finished_list_title.pack()
+finished_list = tk.Listbox(window)
+finished_list.pack(pady=10)
 
 current_id = tk.StringVar()
 
@@ -49,5 +61,8 @@ submit.pack(pady=10)
 
 delete = tk.Button(window, text="Delete", command=delete_task)
 delete.pack(pady=5)
+
+complete = tk.Button(window, text="Complete", command=mark_complete)
+complete.pack(pady=5)
 
 window.mainloop()
