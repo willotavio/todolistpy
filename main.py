@@ -5,18 +5,16 @@ def add_task():
     if len(task_entry.get()) > 0:
         if len(id_entry.get()) == 0:
             todo_list.insert(todo_list.index("end"), task_entry.get())
-            task_entry.delete(0, tk.END)
+            clear_entries()
         else:
             todo_list.delete(id_entry.get())
             todo_list.insert(id_entry.get(), task_entry.get())
-            current_id.set("")
-            task_entry.delete(0, tk.END)
+            clear_entries()
 
 def delete_task():
     if len(current_id.get()) > 0:
         todo_list.delete(id_entry.get())
-        current_id.set("")
-        task_entry.delete(0, tk.END)
+        clear_entries()
 
 def select_task(event):
     task_entry.delete(0, tk.END)
@@ -25,13 +23,17 @@ def select_task(event):
         task_entry.insert(0, f"{todo_list.get(event.widget.curselection())}")
 
 def deselect_task(event):
-    current_id.set("")
-    task_entry.delete(0, tk.END)
+    clear_entries()
 
 def mark_complete():
     if len(current_id.get()) > 0:
         finished_list.insert("end", todo_list.get(current_id.get()))
         todo_list.delete(current_id.get())
+        clear_entries()
+
+def clear_entries():
+    current_id.set("")
+    task_entry.delete(0, tk.END)
 
 window = tk.Tk()
 window.title("To-Do")
