@@ -1,65 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-
-def add_task():
-    if len(task_entry.get()) > 0:
-        if len(id_entry.get()) == 0:
-            todo_list.insert(todo_list.index("end"), task_entry.get())
-
-            with open("tasks.txt", "a") as file:
-                file.write(f"{todo_list.get('end')}\n")
-
-            clear_entries()
-        else:
-            todo_list.delete(id_entry.get())
-            todo_list.insert(id_entry.get(), task_entry.get())
-
-            with open("tasks.txt", "r") as file:
-                lines = file.readlines()
-                lines[int(id_entry.get())] = f"{todo_list.get(int(id_entry.get()))}\n"
-            with open("tasks.txt", "w") as file:
-                file.writelines(lines)
-
-            clear_entries()
-
-def delete_task():
-    if len(current_id.get()) > 0:
-        todo_list.delete(id_entry.get())
-
-        with open("tasks.txt", "r") as file:
-            lines = file.readlines()
-        lines[int(current_id.get())] = ""
-        with open("tasks.txt", "w") as file:
-            file.writelines(lines)
-
-        clear_entries()
-
-def select_task(event):
-    task_entry.delete(0, tk.END)
-    if event.widget.curselection():
-        current_id.set(f"{todo_list.index(event.widget.curselection())}")
-        task_entry.insert(0, f"{todo_list.get(event.widget.curselection())}")
-
-def deselect_task(event):
-    clear_entries()
-
-def mark_complete():
-    if len(current_id.get()) > 0:
-        finished_list.insert("end", todo_list.get(current_id.get()))
-        todo_list.delete(current_id.get())
-        with open("finished-tasks.txt", "a") as file:
-            file.write(f"{finished_list.get('end')}\n")
-
-        with open("tasks.txt", "r") as file:
-            lines = file.readlines()
-        lines[int(current_id.get())] = ""
-        with open("tasks.txt", "w") as file:
-            file.writelines(lines)
-
-        clear_entries()
-def clear_entries():
-    current_id.set("")
-    task_entry.delete(0, tk.END)
+import functions as func
 
 window = tk.Tk()
 window.title("To-Do")
@@ -88,8 +29,8 @@ except FileNotFoundError:
 
 todo_list.pack(pady=10)
 
-todo_list.bind("<<ListboxSelect>>", select_task)
-todo_list.bind("<Double-1>", deselect_task)
+todo_list.bind("<<ListboxSelect>>", lambda event: func.select_task(event, todo_list, current_id, task_entry))
+todo_list.bind("<Double-1>", lambda event: func.deselect_task(event, current_id, task_entry))
 
 current_id = tk.StringVar()
 
@@ -99,13 +40,13 @@ id_entry.pack(pady=10)
 task_entry = tk.Entry(todo_list_tab)
 task_entry.pack(pady=10)
 
-submit = tk.Button(todo_list_tab, text="Submit", command=add_task)
+submit = tk.Button(todo_list_tab, text="Submit", command=lambda: func.add_task(todo_list, current_id, task_entry))
 submit.pack(pady=10)
 
-delete = tk.Button(todo_list_tab, text="Delete", command=delete_task)
+delete = tk.Button(todo_list_tab, text="Delete", command=lambda: func.delete_task(todo_list, current_id, task_entry))
 delete.pack(pady=5)
 
-complete = tk.Button(todo_list_tab, text="Complete", command=mark_complete)
+complete = tk.Button(todo_list_tab, text="Complete", command=lambda: func.mark_complete(todo_list, finished_list, current_id, task_entry))
 complete.pack(pady=5)
 
 finished_list_title = tk.Label(finished_list_tab, text="Finished List")
