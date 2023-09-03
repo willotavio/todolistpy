@@ -5,15 +5,33 @@ def add_task():
     if len(task_entry.get()) > 0:
         if len(id_entry.get()) == 0:
             todo_list.insert(todo_list.index("end"), task_entry.get())
+
+            with open("tasks.txt", "a") as file:
+                file.write(f"{todo_list.get('end')}\n")
+
             clear_entries()
         else:
             todo_list.delete(id_entry.get())
             todo_list.insert(id_entry.get(), task_entry.get())
+
+            with open("tasks.txt", "r") as file:
+                lines = file.readlines()
+                lines[int(id_entry.get())] = f"{todo_list.get(int(id_entry.get()))}\n"
+            with open("tasks.txt", "w") as file:
+                file.writelines(lines)
+
             clear_entries()
 
 def delete_task():
     if len(current_id.get()) > 0:
         todo_list.delete(id_entry.get())
+
+        with open("tasks.txt", "r") as file:
+            lines = file.readlines()
+        lines[int(current_id.get())] = ""
+        with open("tasks.txt", "w") as file:
+            file.writelines(lines)
+
         clear_entries()
 
 def select_task(event):
@@ -29,8 +47,16 @@ def mark_complete():
     if len(current_id.get()) > 0:
         finished_list.insert("end", todo_list.get(current_id.get()))
         todo_list.delete(current_id.get())
-        clear_entries()
+        with open("finished-tasks.txt", "a") as file:
+            file.write(f"{finished_list.get('end')}\n")
 
+        with open("tasks.txt", "r") as file:
+            lines = file.readlines()
+        lines[int(current_id.get())] = ""
+        with open("tasks.txt", "w") as file:
+            file.writelines(lines)
+
+        clear_entries()
 def clear_entries():
     current_id.set("")
     task_entry.delete(0, tk.END)
@@ -51,7 +77,15 @@ notebook.pack()
 
 todo_list_title = tk.Label(todo_list_tab, text="To-Do List")
 todo_list_title.pack()
-todo_list = tk.Listbox(todo_list_tab)
+todo_list = tk.Listbox(todo_list_tab, width=50)
+
+try:
+    with open("tasks.txt", "r") as file:
+        for line in file.readlines():
+            todo_list.insert("end", line)
+except FileNotFoundError:
+    pass
+
 todo_list.pack(pady=10)
 
 todo_list.bind("<<ListboxSelect>>", select_task)
@@ -76,7 +110,14 @@ complete.pack(pady=5)
 
 finished_list_title = tk.Label(finished_list_tab, text="Finished List")
 finished_list_title.pack()
-finished_list = tk.Listbox(finished_list_tab)
+finished_list = tk.Listbox(finished_list_tab, width=50)
+
+try:
+    with open("finished-tasks.txt", "r") as file:
+        for line in file.readlines():
+            finished_list.insert("end", line)
+except FileNotFoundError:
+    pass
 finished_list.pack(pady=10)
 
 window.mainloop()
