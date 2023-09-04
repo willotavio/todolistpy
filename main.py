@@ -59,6 +59,21 @@ try:
             finished_list.insert("end", line)
 except FileNotFoundError:
     pass
+
 finished_list.pack(pady=10)
+
+finished_list.bind("<<ListboxSelect>>", lambda event: func.select_finished_task(event, finished_list, current_finished_id, finished_task_entry))
+finished_list.bind("<Double-1>", lambda event: func.deselect_finished_task(event, current_finished_id, finished_task_entry))
+
+current_finished_id = tk.StringVar()
+
+finished_id_entry = tk.Entry(finished_list_tab, textvariable=current_finished_id, state=tk.DISABLED)
+finished_id_entry.pack(pady=10)
+
+finished_task_entry = tk.Entry(finished_list_tab)
+finished_task_entry.pack(pady=10)
+
+delete_finished = tk.Button(finished_list_tab, text="Delete", command=lambda: func.delete_finished_task(finished_list, current_finished_id, finished_task_entry))
+delete_finished.pack(pady=10)
 
 window.mainloop()
