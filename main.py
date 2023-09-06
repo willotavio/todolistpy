@@ -73,6 +73,9 @@ finished_id_entry.pack(pady=10)
 finished_task_entry = tk.Entry(finished_list_tab)
 finished_task_entry.pack(pady=10)
 
+mark_uncomplete = tk.Button(finished_list_tab, text="Mark uncompleted", command=lambda: func.mark_uncompleted(todo_list, finished_list, current_finished_id, finished_task_entry))
+mark_uncomplete.pack(pady=10)
+
 delete_finished = tk.Button(finished_list_tab, text="Delete", command=lambda: func.delete_finished_task(finished_list, current_finished_id, finished_task_entry))
 delete_finished.pack(pady=10)
 

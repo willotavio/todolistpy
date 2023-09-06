@@ -78,6 +78,22 @@ def delete_finished_task(todo_list, current_id, task_entry):
 
         clear_entries(current_id, task_entry)
 
+def mark_uncompleted(todo_list, finished_list, current_id, task_entry):
+    if len(current_id.get()) > 0:
+        todo_list.insert("end", finished_list.get(current_id.get()))
+        finished_list.delete(current_id.get())
+        with open("tasks.txt", "a") as file:
+            file.write(f"{todo_list.get('end')}\n")
+
+        with open("finished-tasks.txt", "r") as file:
+            lines = file.readlines()
+        lines[int(current_id.get())] = ""
+        with open("finished-tasks.txt", "w") as file:
+            file.writelines(lines)
+
+        clear_entries(current_id, task_entry)
+
+
 def clear_entries(current_id, task_entry):
     current_id.set("")
     task_entry.delete(0, tk.END)
