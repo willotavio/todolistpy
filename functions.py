@@ -35,10 +35,10 @@ def delete_task(todo_list, current_id, task_entry):
 
 def mark_complete(todo_list, finished_list, current_id, task_entry):
     if len(current_id.get()) > 0:
-        finished_list.insert("end", todo_list.get(current_id.get()))
+        finished_list.insert("end", task_entry.get())
         todo_list.delete(current_id.get())
         with open("finished-tasks.txt", "a") as file:
-            file.write(f"{finished_list.get('end')}\n")
+            file.write(f"{finished_list.get('end')}")
 
         with open("tasks.txt", "r") as file:
             lines = file.readlines()
@@ -80,10 +80,10 @@ def delete_finished_task(todo_list, current_id, task_entry):
 
 def mark_uncompleted(todo_list, finished_list, current_id, task_entry):
     if len(current_id.get()) > 0:
-        todo_list.insert("end", finished_list.get(current_id.get()))
+        todo_list.insert("end", task_entry.get())
         finished_list.delete(current_id.get())
         with open("tasks.txt", "a") as file:
-            file.write(f"{todo_list.get('end')}\n")
+            file.write(f"{task_entry.get()}")
 
         with open("finished-tasks.txt", "r") as file:
             lines = file.readlines()
