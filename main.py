@@ -37,7 +37,7 @@ current_id = tk.StringVar()
 id_entry = tk.Entry(todo_list_tab, textvariable=current_id, state=tk.DISABLED)
 id_entry.pack(pady=10)
 
-task_entry = tk.Entry(todo_list_tab)
+task_entry = tk.Text(todo_list_tab, height=3)
 task_entry.pack(pady=10)
 
 submit = tk.Button(todo_list_tab, text="Submit", command=lambda: func.add_task(todo_list, current_id, task_entry))
@@ -70,7 +70,7 @@ current_finished_id = tk.StringVar()
 finished_id_entry = tk.Entry(finished_list_tab, textvariable=current_finished_id, state=tk.DISABLED)
 finished_id_entry.pack(pady=10)
 
-finished_task_entry = tk.Entry(finished_list_tab)
+finished_task_entry = tk.Text(finished_list_tab, height=3)
 finished_task_entry.pack(pady=10)
 
 mark_uncomplete = tk.Button(finished_list_tab, text="Mark uncompleted", command=lambda: func.mark_uncompleted(todo_list, finished_list, current_finished_id, finished_task_entry))
